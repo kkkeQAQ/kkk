@@ -1,6 +1,8 @@
 #include "KApplication.h"
 #include "curses.h"
 
+KApplication* KApplication::self=nullptr;
+
 KApplication::KApplication(int argc,char **argv):args(argv,argv+argc)
 {
 	self=this;

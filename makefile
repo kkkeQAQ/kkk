@@ -3,6 +3,10 @@ CCFLAGS=-std=c++11 -lcurses -lpthread
 CCF=${CC} ${CCFLAGS}
 OBJ=playball
 
+cmake_build:
+	cd build && make
+	build/${OBJ}
+
 ${OBJ}:${OBJ}.o libkwidget.a
 	${CCF} -o $@ $< -lkwidget -L "."
 
