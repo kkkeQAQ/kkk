@@ -32,3 +32,4 @@ long KThread::getExitValue()const
 {
 	return exitValue;
 }
+
