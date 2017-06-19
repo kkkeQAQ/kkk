@@ -23,6 +23,7 @@ int main()
 {
 	Thread t;
 	t.start();
+	Thread::join(&t);
 	cout<<t.getTid();
 	return 0;
 }

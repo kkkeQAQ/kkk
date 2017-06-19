@@ -6,10 +6,10 @@ test:test.o KThread.o
 	${CCF} -o $@ $^
 
 test.o:test.cpp
-	${CCF} -c $@ $<
+	${CCF} -c $<
 
 KThread.o:KThread.cpp KThread.h
-	${CCF} -c $@ $<
+	${CCF} -c $<
 
 run:test
 	./test
