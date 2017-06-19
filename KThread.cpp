@@ -1,13 +1,15 @@
 #include "KThread.h"
+#include <pthread.h>
+#include <cassert>
 
-void KThread::start(KThread *const thread)
+void KThread::startThread(KThread *const thread)
 {
 	thread->run();
 }
 
 void KThread::start()
 {
-	pthread_create(&tid,NULL,(void *)startThread,(void *)this);
+	assert(pthread_create(&tid,NULL,(void*(*)(void*))startThread,(void *)this)==0);
 }
 
 pthread_t KThread::getTid()const

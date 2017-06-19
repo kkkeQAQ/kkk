@@ -6,7 +6,7 @@
 class KThread {
 private:
 	pthread_t tid=-1;
-	static void start(KThread *const thread);
+	static void startThread(KThread *const thread);
 public:
 	virtual void run();
 	void start();
