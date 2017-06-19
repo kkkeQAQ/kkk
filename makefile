@@ -1,18 +1,19 @@
 CC=g++
 CCFLAGS=-std=c++11 -lcurses -lpthread
 CCF=${CC} ${CCFLAGS}
+OBJ=playball
 
-test:test.o KThread.o
+${OBJ}:${OBJ}.o KThread.o
 	${CCF} -o $@ $^
 
-test.o:test.cpp
+${OBJ}.o:${OBJ}.cpp
 	${CCF} -c $<
 
 KThread.o:KThread.cpp KThread.h
 	${CCF} -c $<
 
-run:test
-	./test
+run:${OBJ}
+	./${OBJ}
 
 clean:
-	rm *.o test
+	rm *.o ${OBJ}
