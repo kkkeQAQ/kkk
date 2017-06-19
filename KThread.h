@@ -1,9 +1,10 @@
 #ifndef KTHREAD_H
 #define KTHREAD_H
 
+#include "KObject.h"
 #include <pthread.h>
 
-class KThread {
+class KThread : public KObject{
 private:
 	pthread_t tid=-1;
 	long exitValue;
