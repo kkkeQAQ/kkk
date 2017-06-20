@@ -9,6 +9,7 @@ private:
 	std::unordered_set<KObject*> childrenSet;
 public:
 	KObject(KObject *parent=nullptr);
+	KObject(const KObject &object)=delete;
 	virtual ~KObject();
 	void setParent(KObject *parent);
 	KObject *parent();

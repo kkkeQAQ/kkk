@@ -11,6 +11,7 @@ private:
 	static void startThread(KThread *const thread);
 public:
 	~KThread();
+	KThread(KObject *parent=nullptr):KObject(parent){};
 	static int join(KThread *const thread);
 	int quit();
 	virtual void run()=0;

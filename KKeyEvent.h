@@ -5,6 +5,7 @@
 
 class KKeyEvent : public KEvent{
 public:
+	KKeyEvent(KObject *parent=nullptr):KObject(parent){};
 	unsigned int key;
 };
 
