@@ -6,8 +6,12 @@
 
 class KMutex : public KObject{
 	pthread_mutex_t mutex;
+	bool bLock;
 public:
-	KMutex(KObject *parent=nullptr):KObject(parent){};
+	KMutex(KObject *parent=nullptr);
+	bool isLocked();
+	int lock();
+	int unlock();
 };
 
 #endif //KMUTEX_H
