@@ -5,7 +5,7 @@
 
 class KEvent : public KObject {
 public:
-	KEvent(KObject *parent=nullptr):KObject(parent){};
+	KEvent(KObject *parent=nullptr);
 };
 
 #endif //KEVENT_H
