@@ -6,6 +6,7 @@ KApplication* KApplication::self=nullptr;
 KApplication::KApplication(int argc,char **argv):args(argv,argv+argc)
 {
 	self=this;
+	eventLoop=new KEventLoop(this);
 	initscr();
 }
 
@@ -26,7 +27,6 @@ void KApplication::postEvent(KObject *object,KEvent *event)
 
 int KApplication::exec()
 {
-	eventLoop=new KEventLoop(this);
 	eventLoop->exec();
 }
 

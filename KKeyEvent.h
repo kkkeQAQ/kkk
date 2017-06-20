@@ -6,7 +6,7 @@
 class KKeyEvent : public KEvent{
 public:
 	unsigned int key;
-	KKeyEvent(unsigned int key=0)key(key)
+	KKeyEvent(unsigned int key=0):key(key)
 	{
 	}
 };
