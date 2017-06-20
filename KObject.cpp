@@ -8,7 +8,7 @@ KObject::KObject(KObject *parent)
 KObject::~KObject()
 {
 	while(!childrenSet.empty())delete *childrenSet.begin();
-	parentP->childrenSet.erase(this);
+	if(parentP!=nullptr)parentP->childrenSet.erase(this);
 }
 
 void KObject::event(KEvent *)

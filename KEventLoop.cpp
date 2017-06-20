@@ -37,6 +37,7 @@ void KEventLoop::processEvent()
 	if(event!=nullptr)
 	{
 		processEvent(parent(),object,event);
+		delete event;
 	}
 
 }

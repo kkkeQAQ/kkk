@@ -3,21 +3,11 @@ CCFLAGS=-std=c++11 -lcurses -lpthread
 CCF=${CC} ${CCFLAGS}
 OBJ=playball
 
-cmake_build:build/Makefile
-	cd build && make
-	build/${OBJ}
-
 ${OBJ}:${OBJ}.o libkwidget.a
 	${CCF} -o $@ $< -lkwidget -L "."
 
 ${OBJ}.o:${OBJ}.cpp
 	${CCF} -c $<
-#-------------   begin cmake build   -------------
-
-build/MakeFile:CMakeLists.txt
-	cd build && cmake ..
-
-#-------------   begin kwidget   -------------
 
 libkwidget.a:KThread.o KApplication.o KObject.o
 	ar cr $@ $^

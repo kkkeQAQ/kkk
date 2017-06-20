@@ -15,6 +15,7 @@ public:
 	static KApplication* instance();
 	static void postEvent(KObject *object,KEvent *event);
 	KApplication(int argc,char **argv);
+	~KApplication()override;
 	std::vector<char*>& arguments();
 	int exec();
 };

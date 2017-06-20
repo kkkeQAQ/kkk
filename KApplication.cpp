@@ -1,5 +1,5 @@
 #include "KApplication.h"
-#include "curses.h"
+#include <curses.h>
 
 KApplication* KApplication::self=nullptr;
 
@@ -8,6 +8,14 @@ KApplication::KApplication(int argc,char **argv):args(argv,argv+argc)
 	self=this;
 	eventLoop=new KEventLoop(this);
 	initscr();
+	noecho();
+	cbreak();
+	keypad(stdscr,true);
+}
+
+KApplication::~KApplication()
+{
+	endwin();
 }
 
 std::vector<char*>& KApplication::arguments()
