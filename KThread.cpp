@@ -2,9 +2,14 @@
 #include <pthread.h>
 #include <cstdio>
 #include <stdlib.h>
+#include <signal.h>
 
 KThread::~KThread()
 {
+	if(tid!=pthread_t(-1))
+	{
+		pthread_kill(tid,SIGQUIT);
+	}
 }
 
 int KThread::join(KThread *const thread)
@@ -20,6 +25,7 @@ void KThread::startThread(KThread *const thread)
 
 int KThread::start()
 {
+	if(tid!=pthread_t(-1))return -1;
 	return pthread_create(&tid,NULL,(void*(*)(void*))startThread,(void *)this);
 }
 

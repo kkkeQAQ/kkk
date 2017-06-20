@@ -7,9 +7,15 @@ KKeyListenner::KKeyListenner(KObject *parent):KThread(parent)
 {
 }
 
+KKeyListenner::~KKeyListenner()
+{
+	flag=false;
+	join(this);
+}
+
 void KKeyListenner::run()
 {
-	while(true)
+	while(flag)
 	{
 		kApp->postEvent(nullptr,new KKeyEvent(getch()));
 	}

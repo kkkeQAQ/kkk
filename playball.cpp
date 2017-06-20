@@ -6,40 +6,44 @@
 #include <unistd.h>
 #include "KApplication.h"
 #include "KQuitEvent.h"
+#include "KKeyListener.h"
 #include <curses.h>
+#include "KKeyEvent.h"
 
 using namespace std;
 
-class Thread:public KThread{
+int i=0;
+
+class MainWindow : public KObject {
 public:
-	void run()override
+	MainWindow(KObject *parent=nullptr):KObject(parent)
 	{
-		static int i=0;
-		while(true)
+		(new KKeyListenner(kApp))->start();
+	}
+	void event(KEvent *event)override
+	{
+		if(event->type()==KEvent::KeyEvent)
 		{
-			i++;
-			if(i>=10)
+			KKeyEvent *keyEvent=static_cast<KKeyEvent*>(event);
+			cout<<keyEvent->key<<endl;
+			if(isalpha(keyEvent->key)||isdigit(keyEvent->key))
 			{
-				kApp->postEvent(nullptr,new KQuitEvent());
-				return;
+				addch(keyEvent->key);
+				refresh();
+				if(keyEvent->key=='q')kApp->postEvent(nullptr,new KQuitEvent());
 			}
-			mvaddstr(i,0,to_string(i).c_str());
-			refresh();
-			usleep(500000);
 		}
+	}
+	void show()
+	{
 	}
 };
 
 int main(int argc,char **argv)
 {
 	KApplication a(argc,argv);
-	Thread t;
-	t.start();
-	//	Thread::join(&t);
-	cout<<t.getTid();
-	a.exec();
-	Thread::join(&t);cout<<111<<endl;
-	mvaddstr(LINES/2,COLS/2,"quit");
+	MainWindow w(&a);
+	w.show();
 	return a.exec();
 }
 
