@@ -5,6 +5,10 @@
 
 class KPaintEvent : public KEvent {
 public:
+	EventType type()override
+	{
+		return PaintEvent;
+	}
 };
 
 #endif //KPAINTEVENT_H

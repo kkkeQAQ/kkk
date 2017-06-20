@@ -27,6 +27,6 @@ void KApplication::postEvent(KObject *object,KEvent *event)
 
 int KApplication::exec()
 {
-	eventLoop->exec();
+	return eventLoop->exec();
 }
 

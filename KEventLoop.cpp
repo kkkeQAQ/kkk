@@ -41,8 +41,16 @@ void KEventLoop::processEvent()
 
 }
 
-void KEventLoop::exec()
+int KEventLoop::exec()
 {
-	while(true)processEvent();
+	while(true)
+	{
+		if(!q.empty())
+		{
+			if(q.front().second->type()==KEvent::QuitEvent)break;
+			processEvent();
+		}
+	}
+	return 0;
 }
 

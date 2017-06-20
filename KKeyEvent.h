@@ -9,6 +9,10 @@ public:
 	KKeyEvent(unsigned int key=0):key(key)
 	{
 	}
+	EventType type()override
+	{
+		return KeyEvent;
+	}
 };
 
 #endif //KKEVENT_H

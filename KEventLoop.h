@@ -13,7 +13,7 @@ public:
 	KEventLoop(KObject *parent=nullptr);
 	void postEvent(KObject* object,KEvent* event);
 	void processEvent();
-	void exec();
+	int exec();
 };
 
 #endif //KEVENTLOOP_H
