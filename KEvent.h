@@ -3,9 +3,9 @@
 
 #include "KObject.h"
 
-class KEvent : public KObject {
+class KEvent{
 public:
-	KEvent(KObject *parent=nullptr);
+	virtual ~KEvent(){};
 };
 
 #endif //KEVENT_H

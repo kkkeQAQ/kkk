@@ -5,8 +5,10 @@
 
 class KKeyEvent : public KEvent{
 public:
-	KKeyEvent(KObject *parent=nullptr):KObject(parent){};
 	unsigned int key;
+	KKeyEvent(unsigned int key=0)key(key)
+	{
+	}
 };
 
 #endif //KKEVENT_H

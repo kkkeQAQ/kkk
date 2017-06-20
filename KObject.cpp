@@ -11,6 +11,10 @@ KObject::~KObject()
 	parentP->childrenSet.erase(this);
 }
 
+void KObject::event(KEvent *event)
+{
+}
+
 void KObject::setParent(KObject *parent)
 {
 	parentP=parent;

@@ -7,9 +7,11 @@
 
 class KEventLoop : public KMutex{
 private:
-	queue<KEvent*> q;
+	std::queue<std::pair<KObject*,KEvent*>> q;
+	void processEvent(KObject *parent,KObject *object,KEvent *event);
 public:
 	KEventLoop(KObject *parent=nullptr);
+	void postEvent(KObject* object,KEvent* event);
 	void processEvent();
 	void exec();
 };

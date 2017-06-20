@@ -5,7 +5,6 @@
 
 class KPaintEvent : public KEvent {
 public:
-	KPaintEvent(KObject *parent=nullptr):KObject(parent){};
 };
 
 #endif //KPAINTEVENT_H
