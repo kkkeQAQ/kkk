@@ -48,7 +48,11 @@ int KEventLoop::exec()
 	{
 		if(!q.empty())
 		{
-			if(q.front().second->type()==KEvent::QuitEvent)break;
+			KEvent *event=nullptr;
+			lock();
+			if(!q.empty())event=q.front().second;
+			unlock();
+			if(event!=nullptr&&event->type()==KEvent::QuitEvent)break;
 			processEvent();
 		}
 	}
