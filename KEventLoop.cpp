@@ -1,7 +1,7 @@
 #include "KEventLoop.h"
 #include "KApplication.h"
 
-KEventLoop::KEventLoop(KObject *parent):KMutex(parent)
+KEventLoop::KEventLoop(KObject *parent):KMutex(parent==nullptr?kApp:parent)
 {
 }
 
@@ -36,7 +36,7 @@ void KEventLoop::processEvent()
 	unlock();
 	if(event!=nullptr)
 	{
-		processEvent(kApp,object,event);
+		processEvent(parent(),object,event);
 	}
 
 }

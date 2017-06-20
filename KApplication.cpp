@@ -18,3 +18,15 @@ KApplication* KApplication::instance()
 {
 	return self;
 }
+
+void KApplication::postEvent(KObject *object,KEvent *event)
+{
+	self->eventLoop->postEvent(object,event);
+}
+
+int KApplication::exec()
+{
+	eventLoop=new KEventLoop(this);
+	eventLoop->exec();
+}
+
