@@ -10,6 +10,7 @@ private:
 	static KApplication *self;
 public:
 	static KApplication* instance();
+	static void postEvent();
 	KApplication(int argc,char **argv);
 	std::vector<char*>& arguments();
 	int exec();
