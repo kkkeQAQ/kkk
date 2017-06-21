@@ -27,10 +27,9 @@ public:
 		if(event->type()==KEvent::KeyEvent)
 		{
 			KKeyEvent *keyEvent=static_cast<KKeyEvent*>(event);
-			cout<<keyEvent->key<<endl;
 			if(isalpha(keyEvent->key)||isdigit(keyEvent->key))
 			{
-				addch(keyEvent->key);
+				addch(1+keyEvent->key);
 				refresh();
 				if(keyEvent->key=='q')kApp->postEvent(nullptr,new KQuitEvent());
 			}

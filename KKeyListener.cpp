@@ -10,6 +10,7 @@ KKeyListenner::KKeyListenner(KObject *parent):KThread(parent)
 KKeyListenner::~KKeyListenner()
 {
 	flag=false;
+	pthread_cancel(this->getTid());
 	join(this);
 }
 
