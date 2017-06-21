@@ -26,6 +26,7 @@ protected:
 	{
 		char s[]="O";
 		KPainter painter(this);
+		painter.attrOn(A_DIM);
 		painter.mvAddStr(x,y,s);
 	}
 	void keyEvent(KKeyEvent *e)override

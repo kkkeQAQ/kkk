@@ -8,7 +8,6 @@ KPainter::KPainter(KWidget *widget)
 
 KPainter::~KPainter()
 {
-	wmove(win,LINES-1,COLS-1);
 	wrefresh(win);
 }
 
