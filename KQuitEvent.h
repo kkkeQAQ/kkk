@@ -5,6 +5,10 @@
 
 class KQuitEvent : public KEvent {
 public:
+	int exitCode;
+	KQuitEvent(int exitCode):exitCode(exitCode)
+	{
+	}
 	EventType type()override
 	{
 		return QuitEvent;

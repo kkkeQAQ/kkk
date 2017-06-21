@@ -31,7 +31,7 @@ protected:
 		switch(e->key)
 		{
 		case 'q':
-			kApp->postEvent(nullptr,new KQuitEvent());
+			kApp->quit();
 			break;
 		case KEY_UP:
 			x--;

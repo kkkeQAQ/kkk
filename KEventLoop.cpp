@@ -1,5 +1,6 @@
 #include "KEventLoop.h"
 #include "KApplication.h"
+#include "KQuitEvent.h"
 
 KEventLoop::KEventLoop(KObject *parent):KObject(parent==nullptr?kApp:parent),semaphore(0)
 {
@@ -45,9 +46,9 @@ void KEventLoop::processEvent()
 
 int KEventLoop::exec()
 {
+	KEvent *event=nullptr;
 	while(true)
 	{
-		KEvent *event=nullptr;
 		semaphore.require();
 		mutex.lock();
 		if(!q.empty())event=q.front().second;
@@ -58,6 +59,7 @@ int KEventLoop::exec()
 			processEvent();
 		}
 	}
-	return 0;
+	KQuitEvent *quitEvent=static_cast<KQuitEvent*>(event);
+	return quitEvent->exitCode;
 }
 

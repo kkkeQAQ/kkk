@@ -1,4 +1,5 @@
 #include "KApplication.h"
+#include "KQuitEvent.h"
 #include <curses.h>
 
 KApplication* KApplication::self=nullptr;
@@ -36,5 +37,15 @@ void KApplication::postEvent(KObject *object,KEvent *event)
 int KApplication::exec()
 {
 	return eventLoop->exec();
+}
+
+void KApplication::exit(int exitCode)
+{
+	eventLoop->postEvent(nullptr,new KQuitEvent(exitCode));
+}
+
+void KApplication::quit()
+{
+	exit(0);
 }
 

@@ -17,6 +17,8 @@ public:
 	KApplication(int argc,char **argv);
 	~KApplication()override;
 	std::vector<char*>& arguments();
+	void quit();
+	void exit(int exitCode);
 	int exec();
 };
 
