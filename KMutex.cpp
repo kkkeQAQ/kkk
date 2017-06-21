@@ -1,9 +1,14 @@
 #include "KMutex.h"
 
-KMutex::KMutex()
+KMutex::KMutex(KObject *parent):KObject(parent)
 {
 	pthread_mutex_init(&mutex,NULL);
 	bLock=false;
+}
+
+KMutex::~KMutex()
+{
+	pthread_mutex_destroy(&mutex);
 }
 
 bool KMutex::isLocked()
