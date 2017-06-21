@@ -57,7 +57,7 @@ void KWidget::event(KEvent *e)
 		keyEvent(static_cast<KKeyEvent*>(e));
 		break;
 	case KEvent::PaintEvent:
-		paintEvent(static_cast<KPaintEvent*>(e));
+		if(available)paintEvent(static_cast<KPaintEvent*>(e));
 		break;
 	default:
 		break;
