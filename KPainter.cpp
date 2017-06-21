@@ -3,6 +3,7 @@
 KPainter::KPainter(KWidget *widget)
 {
 	win=widget->win;
+	wattrset(win,0);
 	wclear(win);
 }
 
@@ -48,6 +49,7 @@ int KPainter::mvAddStr(int x,int y,char *s)
 
 int KPainter::setFont(KFont *font)
 {
-	return wattrset(win,font->getStyle()|COLOR_PAIR(font->getColorNumber()));
+	if(has_colors())return wattrset(win,font->getStyle()|COLOR_PAIR(font->getColorNumber()));
+	return wattrset(win,font->getStyle());
 }
 

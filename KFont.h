@@ -4,25 +4,9 @@
 #include <unordered_map>
 #include "curses.h"
 
-class KFont;
-
-namespace std
-{
-		template<>
-			struct hash<KFont>
-			{
-				typedef KFont argument_type;
-				typedef std::size_t result_type;
-
-				result_type operator()(const argument_type&a) const;
-			};
-
-}
-
 class KFont{
 public:
 	enum Color {
-		DEFAULT=-1,
 		BLACK	= COLOR_BLACK,
 		RED		= COLOR_RED,
 		GREEN	= COLOR_GREEN,
@@ -39,7 +23,7 @@ public:
 		BOLD			= A_BOLD,
 		BLANK			= A_INVIS,
 	};
-	KFont(Color fg=DEFAULT,Color bg=DEFAULT,int style=0);
+	KFont(Color fg=WHITE,Color bg=BLACK,int style=0);
 	const KFont& operator+=(int style);
 	const KFont& operator-=(int style);
 	const KFont& operator|=(int style);
@@ -50,9 +34,10 @@ public:
 	friend KFont operator|(const KFont &a,int b);
 	friend KFont operator&(const KFont &a,int b);
 	friend KFont operator^(const KFont &a,int b);
+	friend bool operator==(const KFont &a,const KFont &b);
 	KFont& reset();
-	KFont& setFg(Color fg=DEFAULT);
-	KFont& setBg(Color bg=DEFAULT);
+	KFont& setFg(Color fg=WHITE);
+	KFont& setBg(Color bg=BLACK);
 	KFont& setStyle(int style);
 	Color getFg()const;
 	Color getBg()const;
@@ -62,7 +47,20 @@ private:
 	Color foreground;
 	Color background;
 	int style;
-	static std::unordered_map<KFont,int> colors;
+	static std::unordered_map<std::pair<Color,Color>,int> colors;
 };
+
+namespace std
+{
+		template<>
+			struct hash<pair<KFont::Color,KFont::Color>>
+			{
+				typedef pair<KFont::Color,KFont::Color> argument_type;
+				typedef std::size_t result_type;
+
+				result_type operator()(const argument_type&a) const;
+			};
+
+}
 
 #endif //KFONT_H

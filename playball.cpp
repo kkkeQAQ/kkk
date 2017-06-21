@@ -11,6 +11,7 @@
 #include "KKeyEvent.h"
 #include "KWidget.h"
 #include "KPainter.h"
+#include "KFont.h"
 #include <cmath>
 
 using namespace std;
@@ -26,7 +27,8 @@ protected:
 	{
 		char s[]="O";
 		KPainter painter(this);
-		painter.attrOn(A_DIM);
+		KFont font(KFont::RED,KFont::YELLOW);
+		painter.setFont(&font);
 		painter.mvAddStr(x,y,s);
 	}
 	void keyEvent(KKeyEvent *e)override

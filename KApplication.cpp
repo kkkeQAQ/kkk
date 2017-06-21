@@ -3,11 +3,13 @@
 #include "KPaintEvent.h"
 #include <curses.h>
 #include <iostream>
+#include <locale.h>
 
 KApplication* KApplication::self=nullptr;
 
 KApplication::KApplication(int argc,char **argv):args(argv,argv+argc)
 {
+	setlocale(LC_ALL,"");
 	self=this;
 	eventLoop=new KEventLoop(this);
 	std::cout<<"\e[?25l";
