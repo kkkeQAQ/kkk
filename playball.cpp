@@ -11,15 +11,16 @@
 #include "KKeyEvent.h"
 #include "KWidget.h"
 #include "KPainter.h"
+#include <cmath>
 
 using namespace std;
 
 int i=0;
 
-class MainWindow : public KWidget {
+class MainWindow : public KWidget,public KThread {
 private:
 	KKeyListenner *keyListenner;
-	int x=0,y=0;
+	double x=0,y=0,vx=0,vy=0;
 protected:
 	void paintEvent(KPaintEvent *)override
 	{
@@ -34,29 +35,69 @@ protected:
 			kApp->quit();
 			break;
 		case KEY_UP:
-			x--;
+			vx--;
 			break;
 		case KEY_DOWN:
-			x++;
+			vx++;
 			break;
 		case KEY_LEFT:
-			y--;
+			vy--;
 			break;
 		case KEY_RIGHT:
-			y++;
+			vy++;
 			break;
+		case 'h':
+			if(KWidget::isAvailable())hide();
+			else show();
 		}
-		repaint();
 	}
 public:
 	MainWindow(KObject *parent=nullptr):KWidget(0,0,0,0,parent==nullptr?kApp:parent)
 	{
-		keyListenner =new KKeyListenner(this);
+		x=getHeight()/2;
+		y=getWeight()/2;
+		keyListenner =new KKeyListenner(static_cast<KWidget*>(this));
 		keyListenner->start();
+		start();
 	}
-	void show()
+
+	~MainWindow()override
 	{
+		KThread::cancel();
+		KThread::join();
 	}
+
+	void run()override
+	{
+		while(true)
+		{
+			x+=vx/2;
+			if(x<0)
+			{
+				x=0;
+				vx=abs(vx);
+			}
+			else if(x>=getHeight())
+			{
+				x=getHeight()-1;
+				vx=-abs(vx);
+			}
+			y+=vy;
+			if(y<0)
+			{
+				y=0;
+				vy=abs(vy);
+			}
+			else if(y>=getWeight())
+			{
+				y=getWeight()-1;
+				vy=-abs(vy);
+			}
+			repaint();
+			usleep(30000);
+		}
+	}
+
 };
 
 int main(int argc,char **argv)

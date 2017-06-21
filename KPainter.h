@@ -13,6 +13,8 @@ private:
 public:
 	KPainter(KWidget *widget);
 	~KPainter()override;
+	int move(int x,int y);
+	int getXY(int &x,int &y);
 	int addCh(int ch);
 	int mvAddCh(int x,int y,int ch);
 	int addStr(char* s);

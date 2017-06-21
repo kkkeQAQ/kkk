@@ -3,11 +3,18 @@
 KPainter::KPainter(KWidget *widget)
 {
 	win=widget->win;
+	wclear(win);
 }
 
 KPainter::~KPainter()
 {
+	wmove(win,LINES-1,COLS-1);
 	wrefresh(win);
+}
+
+int KPainter::getXY(int &x,int &y)
+{
+	return getyx(win,x,y);
 }
 
 int KPainter::addCh(int ch)
@@ -23,6 +30,11 @@ int KPainter::mvAddCh(int x,int y,int ch)
 int KPainter::addStr(char* s)
 {
 	return waddstr(win, s);
+}
+
+int KPainter::move(int x,int y)
+{
+	return ::wmove(win,x,y);
 }
 
 int KPainter::mvAddStr(int x,int y,char *s)

@@ -21,11 +21,14 @@ bool KWidget::isAvailable()
 void KWidget::show()
 {
 	available=true;
+	repaint();
 }
 
 void KWidget::hide()
 {
 	available=false;
+	wclear(win);
+	wrefresh(win);
 }
 
 void KWidget::paintEvent(KPaintEvent *)
@@ -39,14 +42,6 @@ void KWidget::keyEvent(KKeyEvent *)
 void KWidget::repaint()
 {
 	kApp->postEvent(this,new KPaintEvent());
-	for(auto i:children())
-	{
-		KWidget *w=static_cast<KWidget*>(i);
-		if(w!=nullptr)
-		{
-			w->repaint();
-		}
-	}
 }
 
 void KWidget::event(KEvent *e)
@@ -57,7 +52,18 @@ void KWidget::event(KEvent *e)
 		keyEvent(static_cast<KKeyEvent*>(e));
 		break;
 	case KEvent::PaintEvent:
-		if(available)paintEvent(static_cast<KPaintEvent*>(e));
+		if(available)
+		{
+			paintEvent(static_cast<KPaintEvent*>(e));
+			for(auto i:children())
+			{
+				KWidget *w=static_cast<KWidget*>(i);
+				if(w!=nullptr)
+				{
+					w->repaint();
+				}
+			}
+		}
 		break;
 	default:
 		break;
@@ -76,12 +82,12 @@ int KWidget::getY()
 
 int KWidget::getHeight()
 {
-	return height;
+	return height?height:LINES;
 }
 
 int KWidget::getWeight()
 {
-	return weight;
+	return weight?weight:COLS;
 }
 
 void KWidget::setWindow(int x,int y,int height,int weight)

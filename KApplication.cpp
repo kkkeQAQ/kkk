@@ -1,5 +1,6 @@
 #include "KApplication.h"
 #include "KQuitEvent.h"
+#include "KPaintEvent.h"
 #include <curses.h>
 
 KApplication* KApplication::self=nullptr;
@@ -36,6 +37,7 @@ void KApplication::postEvent(KObject *object,KEvent *event)
 
 int KApplication::exec()
 {
+	postEvent(nullptr,new KPaintEvent());
 	return eventLoop->exec();
 }
 
