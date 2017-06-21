@@ -6,6 +6,7 @@ KWidget::KWidget(int x,int y,int height,int weight,KObject *parent)
 	win(newwin(height,weight,x,y))
 {
 	available=true;
+	wattroff(win,A_BLINK);
 }
 
 KWidget::~KWidget()

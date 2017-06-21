@@ -24,8 +24,9 @@ private:
 protected:
 	void paintEvent(KPaintEvent *)override
 	{
+		char s[]="O";
 		KPainter painter(this);
-		painter.mvAddCh(x,y,'O');
+		painter.mvAddStr(x,y,s);
 	}
 	void keyEvent(KKeyEvent *e)override
 	{

@@ -14,6 +14,7 @@ public:
 	KPainter(KWidget *widget);
 	~KPainter()override;
 	int move(int x,int y);
+	int box();
 	int getXY(int &x,int &y);
 	int addCh(int ch);
 	int mvAddCh(int x,int y,int ch);

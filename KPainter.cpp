@@ -17,6 +17,11 @@ int KPainter::getXY(int &x,int &y)
 	return getyx(win,x,y);
 }
 
+int KPainter::box()
+{
+	return ::box(win,ACS_VLINE,ACS_HLINE);
+}
+
 int KPainter::addCh(int ch)
 {
 	return waddch(win, ch);

@@ -2,6 +2,7 @@
 #include "KQuitEvent.h"
 #include "KPaintEvent.h"
 #include <curses.h>
+#include <iostream>
 
 KApplication* KApplication::self=nullptr;
 
@@ -9,15 +10,18 @@ KApplication::KApplication(int argc,char **argv):args(argv,argv+argc)
 {
 	self=this;
 	eventLoop=new KEventLoop(this);
+	std::cout<<"\e[?25l";
 	initscr();
 	noecho();
 	cbreak();
+	start_color();
 	keypad(stdscr,true);
 }
 
 KApplication::~KApplication()
 {
 	endwin();
+	std::cout<<"\e[?25h";
 }
 
 std::vector<char*>& KApplication::arguments()
