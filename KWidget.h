@@ -7,6 +7,7 @@
 #include "KKeyEvent.h"
 #include "KPaintEvent.h"
 #include <curses.h>
+#include "KPainter.h"
 
 class KWidget : public KObject {
 private:
@@ -20,6 +21,7 @@ protected:
 	virtual void keyEvent(KKeyEvent *);
 	virtual void paintEvent(KPaintEvent *);
 public:
+	friend class KPainter;
 	int getX();
 	int getY();
 	int getHeight();
