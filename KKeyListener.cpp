@@ -18,7 +18,7 @@ void KKeyListenner::run()
 {
 	while(flag)
 	{
-		kApp->postEvent(nullptr,new KKeyEvent(getch()));
+		kApp->postEvent(parent(),new KKeyEvent(getch()));
 	}
 }
 

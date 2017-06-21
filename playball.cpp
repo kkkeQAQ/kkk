@@ -19,7 +19,7 @@ class MainWindow : public KObject {
 public:
 	MainWindow(KObject *parent=nullptr):KObject(parent==nullptr?kApp:parent)
 	{
-		keyListenner =new KKeyListenner(kApp);
+		keyListenner =new KKeyListenner(this);
 		keyListenner->start();
 	}
 	void event(KEvent *event)override
