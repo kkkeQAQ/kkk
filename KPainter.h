@@ -4,6 +4,7 @@
 #include "KObject.h"
 #include "KWidget.h"
 #include "curses.h"
+#include "KFont.h"
 
 class KWidget;
 
@@ -20,10 +21,7 @@ public:
 	int mvAddCh(int x,int y,int ch);
 	int addStr(char* s);
 	int mvAddStr(int x,int y,char *s);
-	int attrOn(chtype att);
-	int attrOff(chtype att);
-	int attrSet(chtype att);
-
+	int setFont(KFont *font);
 };
 
 #endif //KPAINTER_H

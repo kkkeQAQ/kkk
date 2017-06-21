@@ -46,19 +46,8 @@ int KPainter::mvAddStr(int x,int y,char *s)
 	return mvwaddstr(win, x, y, s);
 }
 
-int KPainter::attrOn(chtype att)
+int KPainter::setFont(KFont *font)
 {
-	return wattron(win, att);
+	return wattrset(win,font->getStyle()|COLOR_PAIR(font->getColorNumber()));
 }
-
-int KPainter::attrOff(chtype att)
-{
-	return wattroff(win, att);
-}
-
-int KPainter::attrSet(chtype att)
-{
-	return wattrset(win, att);
-}
-
 
