@@ -1,7 +1,7 @@
 #include "KEventLoop.h"
 #include "KApplication.h"
 
-KEventLoop::KEventLoop(KObject *parent):KObject(parent==nullptr?kApp:parent)
+KEventLoop::KEventLoop(KObject *parent):KObject(parent==nullptr?kApp:parent),semaphore(0)
 {
 }
 
@@ -10,6 +10,7 @@ void KEventLoop::postEvent(KObject *object,KEvent *event)
 	mutex.lock();
 	q.emplace(object,event);
 	mutex.unlock();
+	semaphore.release();
 }
 
 void KEventLoop::processEvent(KObject *parent,KObject *object,KEvent *event)
@@ -47,6 +48,7 @@ int KEventLoop::exec()
 	while(true)
 	{
 		KEvent *event=nullptr;
+		semaphore.require();
 		mutex.lock();
 		if(!q.empty())event=q.front().second;
 		mutex.unlock();
