@@ -3,10 +3,11 @@
 
 #include <unordered_set>
 #include "KEvent.h"
+#include "KMutex.h"
 
 class KObject{
 private:
-	KObject *parentP;
+	KObject *parentP=nullptr;
 	std::unordered_set<KObject*> childrenSet;
 public:
 	KObject(KObject *parent=nullptr);
@@ -15,7 +16,7 @@ public:
 	virtual void event(KEvent *event);
 	void setParent(KObject *parent);
 	KObject *parent();
-	std::unordered_set<KObject*> children();
+	std::unordered_set<KObject*>& children();
 };
 
 #endif //KOBJECT_H

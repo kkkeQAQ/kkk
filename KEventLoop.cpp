@@ -1,15 +1,15 @@
 #include "KEventLoop.h"
 #include "KApplication.h"
 
-KEventLoop::KEventLoop(KObject *parent):KMutex(parent==nullptr?kApp:parent)
+KEventLoop::KEventLoop(KObject *parent):KObject(parent==nullptr?kApp:parent)
 {
 }
 
 void KEventLoop::postEvent(KObject *object,KEvent *event)
 {
-	lock();
+	mutex.lock();
 	q.emplace(object,event);
-	unlock();
+	mutex.unlock();
 }
 
 void KEventLoop::processEvent(KObject *parent,KObject *object,KEvent *event)
@@ -26,14 +26,14 @@ void KEventLoop::processEvent()
 {
 	KObject *object;
 	KEvent *event=nullptr;
-	lock();
+	mutex.lock();
 	if(!q.empty())
 	{
 		auto pair=q.front();q.pop();
 		object=pair.first;
 		event=pair.second;
 	}
-	unlock();
+	mutex.unlock();
 	if(event!=nullptr)
 	{
 		processEvent(parent(),object,event);
@@ -46,13 +46,13 @@ int KEventLoop::exec()
 {
 	while(true)
 	{
-		if(!q.empty())
+		KEvent *event=nullptr;
+		mutex.lock();
+		if(!q.empty())event=q.front().second;
+		mutex.unlock();
+		if(event!=nullptr)
 		{
-			KEvent *event=nullptr;
-			lock();
-			if(!q.empty())event=q.front().second;
-			unlock();
-			if(event!=nullptr&&event->type()==KEvent::QuitEvent)break;
+			if(event->type()==KEvent::QuitEvent)break;
 			processEvent();
 		}
 	}

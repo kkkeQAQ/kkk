@@ -1,6 +1,6 @@
 #include "KMutex.h"
 
-KMutex::KMutex(KObject *parent):KObject(parent)
+KMutex::KMutex()
 {
 	pthread_mutex_init(&mutex,NULL);
 	bLock=false;
@@ -13,10 +13,14 @@ bool KMutex::isLocked()
 
 int KMutex::lock()
 {
-	pthread_mutex_lock(&mutex);
+	int res=pthread_mutex_lock(&mutex);
+	bLock=true;
+	return res;
 }
 
 int KMutex::unlock()
 {
-	pthread_mutex_unlock(&mutex);
+	bLock=false;
+	return pthread_mutex_unlock(&mutex);
 }
+

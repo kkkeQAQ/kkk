@@ -15,10 +15,12 @@ using namespace std;
 int i=0;
 
 class MainWindow : public KObject {
+	KKeyListenner *keyListenner;
 public:
-	MainWindow(KObject *parent=nullptr):KObject(parent)
+	MainWindow(KObject *parent=nullptr):KObject(parent==nullptr?kApp:parent)
 	{
-		(new KKeyListenner(kApp))->start();
+		keyListenner =new KKeyListenner(kApp);
+		keyListenner->start();
 	}
 	void event(KEvent *event)override
 	{

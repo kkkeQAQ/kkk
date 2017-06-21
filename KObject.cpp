@@ -7,8 +7,11 @@ KObject::KObject(KObject *parent)
 
 KObject::~KObject()
 {
-	while(!childrenSet.empty())delete *childrenSet.begin();
-	if(parentP!=nullptr)parentP->childrenSet.erase(this);
+	if(parentP!=nullptr)
+	{
+		parentP->children().erase(this);
+	}
+	while(!children().empty())delete *children().begin();
 }
 
 void KObject::event(KEvent *)
@@ -17,10 +20,11 @@ void KObject::event(KEvent *)
 
 void KObject::setParent(KObject *parent)
 {
+	if(parentP!=nullptr)parentP->children().erase(this);
 	parentP=parent;
 	if(parentP!=nullptr)
 	{
-		parentP->childrenSet.insert(this);
+		parentP->children().insert(this);
 	}
 }
 
@@ -29,7 +33,7 @@ KObject* KObject::parent()
 	return parentP;
 }
 
-std::unordered_set<KObject*> KObject::children()
+std::unordered_set<KObject*>& KObject::children()
 {
 	return childrenSet;
 }
