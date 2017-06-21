@@ -6,27 +6,52 @@
 
 KThread::~KThread()
 {
-	if(tid!=pthread_t(-1))
-	{
-		pthread_kill(tid,SIGQUIT);
-	}
+	cancel();
 }
 
 int KThread::join(KThread *const thread)
 {
-	return pthread_join(thread->getTid(),(void**)&thread->exitValue);
+	return thread->join();
+}
+
+bool KThread::isRunning()const
+{
+	return tid != pthread_t(-1);
+}
+
+int KThread::join()
+{
+	int res=-1;
+	mutex.lock();
+	if(isRunning())res=pthread_join(tid,(void**)&exitValue);
+	mutex.unlock();
+	return res;
+}
+
+int KThread::cancel()
+{
+	int res=-1;
+	mutex.lock();
+	if(isRunning())res=pthread_cancel(tid);
+	mutex.unlock();
+	return res;
 }
 
 void KThread::startThread(KThread *const thread)
 {
 	thread->run();
+	thread->mutex.lock();
 	thread->tid=-1;
+	thread->mutex.unlock();
 }
 
 int KThread::start()
 {
-	if(tid!=pthread_t(-1))return -1;
-	return pthread_create(&tid,NULL,(void*(*)(void*))startThread,(void *)this);
+	int res=-1;
+	mutex.lock();
+	if(!isRunning())res=pthread_create(&tid,NULL,(void*(*)(void*))startThread,(void *)this);
+	mutex.unlock();
+	return res;
 }
 
 pthread_t KThread::getTid()const
