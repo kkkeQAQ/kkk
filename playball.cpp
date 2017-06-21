@@ -9,31 +9,50 @@
 #include "KKeyListener.h"
 #include <curses.h>
 #include "KKeyEvent.h"
+#include "KWidget.h"
+#include "KPainter.h"
 
 using namespace std;
 
 int i=0;
 
-class MainWindow : public KObject {
+class MainWindow : public KWidget {
+private:
 	KKeyListenner *keyListenner;
+	int x=0,y=0;
+protected:
+	void paintEvent(KPaintEvent *)override
+	{
+		KPainter painter(this);
+		painter.mvAddCh(x,y,'O');
+	}
+	void keyEvent(KKeyEvent *e)override
+	{
+		switch(e->key)
+		{
+		case 'q':
+			kApp->postEvent(nullptr,new KQuitEvent());
+			break;
+		case KEY_UP:
+			x--;
+			break;
+		case KEY_DOWN:
+			x++;
+			break;
+		case KEY_LEFT:
+			y--;
+			break;
+		case KEY_RIGHT:
+			y++;
+			break;
+		}
+		repaint();
+	}
 public:
-	MainWindow(KObject *parent=nullptr):KObject(parent==nullptr?kApp:parent)
+	MainWindow(KObject *parent=nullptr):KWidget(0,0,0,0,parent==nullptr?kApp:parent)
 	{
 		keyListenner =new KKeyListenner(this);
 		keyListenner->start();
-	}
-	void event(KEvent *event)override
-	{
-		if(event->type()==KEvent::KeyEvent)
-		{
-			KKeyEvent *keyEvent=static_cast<KKeyEvent*>(event);
-			if(isalpha(keyEvent->key)||isdigit(keyEvent->key))
-			{
-				addch(1+keyEvent->key);
-				refresh();
-				if(keyEvent->key=='q')kApp->postEvent(nullptr,new KQuitEvent());
-			}
-		}
 	}
 	void show()
 	{
