@@ -18,7 +18,7 @@ void KEventLoop::processEvent(KObject *parent,KObject *object,KEvent *event)
 	else
 	{
 		if(object==nullptr)parent->event(event);
-		for(auto i:object->children())processEvent(i,object,event);
+		for(auto i:parent->children())processEvent(i,object,event);
 	}
 }
 
