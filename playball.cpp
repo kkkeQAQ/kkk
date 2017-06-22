@@ -18,9 +18,9 @@
 #include <cstring>
 #include <iostream>
 #include <algorithm>
+#include <vector>
 #include <cmath>
 #include <unistd.h>
-#include <vector>
 #include <ctime>
 #include <stdlib.h>
 
@@ -33,11 +33,13 @@
 #include "KFont.h"
 #include "KMutex.h"
 
+#include "args/args.hxx"
+
 #define SCORE(vx,vy,w) ((abs(vx)*abs(vy)*((w)-22.0))/2.0)
 
 using namespace std;
 
-int i=0;
+const string version="v1.0";
 
 class HelpWindow : public KWidget {
 private:
@@ -242,8 +244,41 @@ public:
 
 };
 
-int main(int argc,char **argv)
+void argsParse(int argc,char **argv)
 {
+	args::ArgumentParser parser(string("playball ")+version);
+	args::HelpFlag help(parser,"help","Show this help menu.",{'h',"help"});
+	args::Flag fVersion(parser,"version","Show version",{'v',"version"});
+	try{
+		parser.ParseCLI(argc,argv);
+	}
+	catch(args::Help e)
+	{
+		cout<<parser;
+		exit(0);
+	}
+	catch(args::ParseError e)
+	{
+		cerr<<e.what()<<endl;
+		cerr<<parser;
+		exit(1);
+	}
+	catch(args::ValidationError e)
+	{
+		cerr<<e.what()<<endl;
+		cerr<<parser;
+		exit(1);
+	}
+	if(fVersion)
+	{
+		cout<<version<<endl;
+		exit(0);
+	}
+}
+
+int main(int argc,char** argv)
+{
+	argsParse(argc,argv);
 	KApplication a(argc,argv);
 	MainWindow w;
 	w.show();
