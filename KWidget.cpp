@@ -67,7 +67,7 @@ void KWidget::event(KEvent *e)
 					w->event(e);
 				}
 			}
-			if(parent()==kApp)wrefresh(win);
+			wrefresh(win);
 			winMutex.unlock();
 		}
 		break;
