@@ -7,7 +7,7 @@ KWidget::KWidget(int x,int y,int height,int weight,KWidget *parent)
 	KWidget *p=dynamic_cast<KWidget*>(KObject::parent());
 	if(p==nullptr)win=newwin(height,weight,x,y);
 	else win=derwin(p->win,height,weight,x,y);
-	available=true;
+	available=false;
 	wattroff(win,A_BLINK);
 }
 
@@ -61,13 +61,13 @@ void KWidget::event(KEvent *e)
 			paintEvent(static_cast<KPaintEvent*>(e));
 			for(auto i:children())
 			{
-				KWidget *w=static_cast<KWidget*>(i);
+				KWidget *w=dynamic_cast<KWidget*>(i);
 				if(w!=nullptr)
 				{
 					w->event(e);
 				}
 			}
-			wrefresh(win);
+			if(parent()==kApp)wrefresh(win);
 			winMutex.unlock();
 		}
 		break;
@@ -99,13 +99,24 @@ int KWidget::getWeight()
 void KWidget::setWindow(int x,int y,int height,int weight)
 {
 	winMutex.lock();
-	this->x=x;
-	this->y=y;
-	this->height=height;
-	this->weight=weight;
-	KWidget *p=dynamic_cast<KWidget*>(KObject::parent());
-	if(p==nullptr)win=newwin(height,weight,x,y);
-	else win=derwin(p->win,height,weight,x,y);
+	wclear(win);
+	wrefresh(win);
+	if(this->height+1==height&&this->weight==weight)
+	{
+		this->x=x;
+		this->y=y;
+		mvwin(win,x,y);
+	}
+	else
+	{
+		this->x=x;
+		this->y=y;
+		this->height=height;
+		this->weight=weight;
+		KWidget *p=dynamic_cast<KWidget*>(KObject::parent());
+		if(p==nullptr)win=newwin(height,weight,x,y);
+		else win=derwin(p->win,height,weight,x,y);
+	}
 	winMutex.unlock();
 	repaint();
 }

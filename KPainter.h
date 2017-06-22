@@ -19,8 +19,8 @@ public:
 	int getXY(int &x,int &y);
 	int addCh(int ch);
 	int mvAddCh(int x,int y,int ch);
-	int addStr(char* s);
-	int mvAddStr(int x,int y,char *s);
+	int addStr(const char* s);
+	int mvAddStr(int x,int y,const char *s);
 	int setFont(KFont *font);
 };
 

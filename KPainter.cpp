@@ -13,7 +13,8 @@ KPainter::~KPainter()
 
 int KPainter::getXY(int &x,int &y)
 {
-	return getyx(win,x,y);
+	int res=getyx(win,x,y);
+	return res;
 }
 
 int KPainter::box()
@@ -31,7 +32,7 @@ int KPainter::mvAddCh(int x,int y,int ch)
 	return mvwaddch(win, x, y, ch);
 }
 
-int KPainter::addStr(char* s)
+int KPainter::addStr(const char* s)
 {
 	return waddstr(win, s);
 }
@@ -41,7 +42,7 @@ int KPainter::move(int x,int y)
 	return ::wmove(win,x,y);
 }
 
-int KPainter::mvAddStr(int x,int y,char *s)
+int KPainter::mvAddStr(int x,int y,const char *s)
 {
 	return mvwaddstr(win, x, y, s);
 }

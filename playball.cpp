@@ -34,14 +34,20 @@ private:
 protected:
 	void paintEvent(KPaintEvent *)override
 	{
+		KPainter painter(this);
+		painter.box();
+		for(int i=0;i<(int)help.size();i++)
+		{
+			painter.mvAddStr(i+1,1,help[i].c_str());
+		}
 	}
 public:
-	HelpWindow(int x,int y,int height,int weight,KWidget *parent) : KWidget(x,y,height,weight,parent)
+	HelpWindow(KWidget *parent) : KWidget(0,0,0,0,parent)
 	{
 		int h=help.size();
 		int w=0;
 		for(auto &i:help)w=max(w,(int)i.length());
-		setWindow(x,y,h,w);
+		setWindow(0,0,h+2,w+2);
 	}
 	
 };
@@ -49,11 +55,15 @@ public:
 class MainWindow : public KWidget,public KThread {
 private:
 	KKeyListenner *keyListenner;
+	HelpWindow *helpWindow;
 	double x=0,y=0,vx=0,vy=0;
 	int l,r;
 protected:
 	void paintEvent(KPaintEvent *)override
 	{
+		int h=helpWindow->getHeight();
+		int w=helpWindow->getWeight();
+		helpWindow->setWindow(getHeight()/2-h/2,getWeight()/2-w/2,h,w);
 		char s[]="O";
 		KPainter painter(this);
 		KFont font(KFont::RED,KFont::YELLOW);
@@ -80,8 +90,10 @@ protected:
 			vy++;
 			break;
 		case 'h':
-			if(KWidget::isAvailable())hide();
-			else show();
+			if(!helpWindow->isAvailable())
+				helpWindow->show();
+			else
+				helpWindow->hide();
 		}
 	}
 public:
@@ -92,6 +104,7 @@ public:
 		keyListenner =new KKeyListenner(static_cast<KWidget*>(this));
 		keyListenner->start();
 		start();
+		helpWindow=new HelpWindow(this);
 	}
 
 	~MainWindow()override
