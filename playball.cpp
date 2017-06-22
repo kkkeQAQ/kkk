@@ -5,6 +5,8 @@
 #include <cmath>
 #include <unistd.h>
 #include <vector>
+#include <ctime>
+#include <stdlib.h>
 
 #include "KThread.h"
 #include "KApplication.h"
@@ -56,51 +58,88 @@ class MainWindow : public KWidget,public KThread {
 private:
 	KKeyListenner *keyListenner;
 	HelpWindow *helpWindow;
-	double x=0,y=0,vx=0,vy=0;
-	int l,r;
+	double x=0,y=0,vx=0,vy=0,addv=1;
+	int l=0,ll=20,lv=4;
+	int score=0;
 protected:
 	void paintEvent(KPaintEvent *)override
 	{
 		int h=helpWindow->getHeight();
 		int w=helpWindow->getWeight();
 		helpWindow->setWindow(getHeight()/2-h/2,getWeight()/2-w/2,h,w);
-		char s[]="O";
 		KPainter painter(this);
-		KFont font(KFont::RED,KFont::YELLOW);
-		painter.setFont(&font);
-		painter.mvAddStr(x,y,s);
+		KFont fBall(KFont::RED,KFont::RED);
+		KFont fPlayer(KFont::BLUE,KFont::BLUE);
+		painter.setFont(&fBall);
+		painter.mvAddStr(x,y,"  ");
+		painter.setFont(&fPlayer);
+		for(int i=0;i<ll;i++)painter.mvAddCh(getHeight()-1,l+i,' ');
+
+		string he="help: h ?";
+		painter.setFont(&fBall.reset());
+		painter.mvAddStr(0,getWeight()-he.length()-1,he.c_str());
+
+		painter.move(0,0);
+		painter.addStr(("score: "+to_string(score)).c_str());
 	}
 	void keyEvent(KKeyEvent *e)override
 	{
+		bool flag=false;
+		if(helpWindow->isAvailable())flag=true;
 		switch(e->key)
 		{
 		case 'q':
 			kApp->quit();
 			break;
-		case KEY_UP:
-			vx--;
-			break;
-		case KEY_DOWN:
-			vx++;
-			break;
-		case KEY_LEFT:
-			vy--;
-			break;
-		case KEY_RIGHT:
-			vy++;
-			break;
 		case 'h':
+		case '?':
 			if(!helpWindow->isAvailable())
 				helpWindow->show();
 			else
 				helpWindow->hide();
+			break;
+		case KEY_LEFT:
+			if(flag)break;
+			l-=lv;
+			if(l<0)
+				l=0;
+			break;
+		case KEY_RIGHT:
+			if(flag)break;
+			l+=lv;
+			if(l+ll>getWeight())l=getWeight()-ll;
+			break;
+		case 'f':
+			if(flag)break;
+			if(vx<0)vx-=addv;
+			else vx+=addv;
+			break;
+		case 's':
+			if(flag)break;
+			if(vx<0)vx+=addv;
+			else vx-=addv;
+			break;
+		case 'F':
+			if(flag)break;
+			if(vy<0)vy-=addv;
+			else vy+=addv;
+			break;
+		case 'S':
+			if(flag)break;
+			if(vy<0)vy+=addv;
+			else vy-=addv;
+			break;
 		}
 	}
 public:
 	MainWindow(KWidget *parent=nullptr):KWidget(0,0,0,0,parent)
 	{
+		srand(time(nullptr));
 		x=getHeight()/2;
 		y=getWeight()/2;
+		vx=((double)rand()/RAND_MAX)*4.0-2.0;
+		vy=((double)rand()/RAND_MAX)*2.0;
+		l=getWeight()/2-ll/2;
 		keyListenner =new KKeyListenner(static_cast<KWidget*>(this));
 		keyListenner->start();
 		start();
@@ -117,15 +156,28 @@ public:
 	{
 		while(true)
 		{
+			if(helpWindow->isAvailable())
+			{
+				repaint();
+				usleep(50000);
+				continue;
+			}
 			x+=vx/2;
 			if(x<0)
 			{
 				x=0;
 				vx=abs(vx);
 			}
+			else if(x>=getHeight()-1&&y>=l&&y<l+ll)
+			{
+				x=getHeight()-2;
+				score+=100*(vx+vy);
+				vx=-abs(vx);
+			}
 			else if(x>=getHeight())
 			{
 				x=getHeight()-1;
+				score-=1000;
 				vx=-abs(vx);
 			}
 			y+=vy;
@@ -134,9 +186,9 @@ public:
 				y=0;
 				vy=abs(vy);
 			}
-			else if(y>=getWeight())
+			else if(y>=getWeight()-1)
 			{
-				y=getWeight()-1;
+				y=getWeight()-2;
 				vy=-abs(vy);
 			}
 			repaint();
