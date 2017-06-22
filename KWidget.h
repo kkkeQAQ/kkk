@@ -8,6 +8,7 @@
 #include "KPaintEvent.h"
 #include <curses.h>
 #include "KPainter.h"
+#include "KMutex.h"
 
 class KWidget : public KObject {
 private:
@@ -15,6 +16,7 @@ private:
 	int y;
 	int height;
 	int weight;
+	KMutex winMutex;
 	WINDOW *win;
 	bool available;
 protected:
@@ -30,7 +32,7 @@ public:
 	void show();
 	void hide();
 	void setWindow(int x,int y,int height,int weight);
-	KWidget(int x=0,int y=0,int height=0,int weight=0,KObject *parent=nullptr);
+	KWidget(int x=0,int y=0,int height=0,int weight=0,KWidget *parent=nullptr);
 	~KWidget()override;
 	void repaint();
 	void event(KEvent *)override;

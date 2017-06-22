@@ -1,10 +1,12 @@
 #include "KWidget.h"
 
-KWidget::KWidget(int x,int y,int height,int weight,KObject *parent)
-	:KObject(parent==nullptr?kApp:parent),
-	x(x),y(y),height(height),weight(weight),
-	win(newwin(height,weight,x,y))
+KWidget::KWidget(int x,int y,int height,int weight,KWidget *parent)
+	:KObject(parent==nullptr?kApp:static_cast<KObject*>(parent)),
+	x(x),y(y),height(height),weight(weight)
 {
+	KWidget *p=dynamic_cast<KWidget*>(KObject::parent());
+	if(p==nullptr)win=newwin(height,weight,x,y);
+	else win=derwin(p->win,height,weight,x,y);
 	available=true;
 	wattroff(win,A_BLINK);
 }
@@ -55,15 +57,18 @@ void KWidget::event(KEvent *e)
 	case KEvent::PaintEvent:
 		if(available)
 		{
+			winMutex.lock();
 			paintEvent(static_cast<KPaintEvent*>(e));
 			for(auto i:children())
 			{
 				KWidget *w=static_cast<KWidget*>(i);
 				if(w!=nullptr)
 				{
-					w->repaint();
+					w->event(e);
 				}
 			}
+			wrefresh(win);
+			winMutex.unlock();
 		}
 		break;
 	default:
@@ -83,20 +88,25 @@ int KWidget::getY()
 
 int KWidget::getHeight()
 {
-	return height?height:LINES;
+	return height?height:LINES-x;
 }
 
 int KWidget::getWeight()
 {
-	return weight?weight:COLS;
+	return weight?weight:COLS-y;
 }
 
 void KWidget::setWindow(int x,int y,int height,int weight)
 {
+	winMutex.lock();
 	this->x=x;
 	this->y=y;
 	this->height=height;
 	this->weight=weight;
+	KWidget *p=dynamic_cast<KWidget*>(KObject::parent());
+	if(p==nullptr)win=newwin(height,weight,x,y);
+	else win=derwin(p->win,height,weight,x,y);
+	winMutex.unlock();
 	repaint();
 }
 

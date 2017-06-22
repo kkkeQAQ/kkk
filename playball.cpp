@@ -2,26 +2,55 @@
 #include <cstring>
 #include <iostream>
 #include <algorithm>
-#include "KThread.h"
+#include <cmath>
 #include <unistd.h>
+#include <vector>
+
+#include "KThread.h"
 #include "KApplication.h"
-#include "KQuitEvent.h"
 #include "KKeyListener.h"
-#include <curses.h>
 #include "KKeyEvent.h"
 #include "KWidget.h"
 #include "KPainter.h"
 #include "KFont.h"
-#include <cmath>
 
 using namespace std;
 
 int i=0;
 
+class HelpWindow : public KWidget {
+private:
+	vector<string>help={
+		"           Welcome to the game",
+		"",
+		"Help:",
+		" 'N': Start a new game.",
+		" 'q': Quit game.",
+		" 'f': Accelerate the ball in X direction",
+		" 's': Slow down the ball in X direction",
+		" 'F': Accelerate the ball in Y direction",
+		" 'S': Slow down the ball in Y direction",
+	};
+protected:
+	void paintEvent(KPaintEvent *)override
+	{
+	}
+public:
+	HelpWindow(int x,int y,int height,int weight,KWidget *parent) : KWidget(x,y,height,weight,parent)
+	{
+		int h=help.size();
+		int w=0;
+		for(auto &i:help)w=max(w,(int)i.length());
+		setWindow(x,y,h,w);
+	}
+	
+};
+
 class MainWindow : public KWidget,public KThread {
 private:
 	KKeyListenner *keyListenner;
 	double x=0,y=0,vx=0,vy=0;
+	int l,r;
 protected:
 	void paintEvent(KPaintEvent *)override
 	{
@@ -56,7 +85,7 @@ protected:
 		}
 	}
 public:
-	MainWindow(KObject *parent=nullptr):KWidget(0,0,0,0,parent==nullptr?kApp:parent)
+	MainWindow(KWidget *parent=nullptr):KWidget(0,0,0,0,parent)
 	{
 		x=getHeight()/2;
 		y=getWeight()/2;
@@ -98,7 +127,7 @@ public:
 				vy=-abs(vy);
 			}
 			repaint();
-			usleep(30000);
+			usleep(50000);
 		}
 	}
 
@@ -107,7 +136,7 @@ public:
 int main(int argc,char **argv)
 {
 	KApplication a(argc,argv);
-	MainWindow w(&a);
+	MainWindow w;
 	w.show();
 	return a.exec();
 }

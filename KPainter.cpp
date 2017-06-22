@@ -9,7 +9,6 @@ KPainter::KPainter(KWidget *widget)
 
 KPainter::~KPainter()
 {
-	wrefresh(win);
 }
 
 int KPainter::getXY(int &x,int &y)
