@@ -9,7 +9,7 @@ a example of ktk
 ### Build dependencies
 
 * libcurses
-* libthread
+* libpthread
 * c++11
 * cmake >= v2.6
 
